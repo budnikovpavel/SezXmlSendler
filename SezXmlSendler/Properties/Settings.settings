@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SezXmlSendler.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="HostName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.112.78</Value>
+    </Setting>
+    <Setting Name="User" Type="System.String" Scope="User">
+      <Value Profile="(Default)">sez_ais</Value>
+    </Setting>
+    <Setting Name="Password" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ais_sez_7</Value>
+    </Setting>
+    <Setting Name="Port" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">5672</Value>
+    </Setting>
+    <Setting Name="ExchangeName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">sez.ais</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
