@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using KernelUI;
 using System.Text;
 using System.Linq;
-using SezXmlSendler.Extantions;
-using SezXmlSendler.Model;
 using System.Threading.Tasks;
 
 namespace SezXmlSendler
@@ -124,7 +122,7 @@ namespace SezXmlSendler
         {
             if (!(checkedListBoxTasks.SelectedItem is Sendler sen)) return;
             if (MessageBox.Show($"Запустить {sen.Name} ?") != DialogResult.OK) return;
-            sen.RunningAsync(checkBoxNeedSend.Checked).Wait();
+            Task.Run(()=>sen.RunningAsync(checkBoxNeedSend.Checked));
         }
 
         private void buttonTestConnection_Click(object sender, EventArgs e)
@@ -152,16 +150,16 @@ namespace SezXmlSendler
         }
 
        
-        private void RunMfrcontents(object sender, string routingKey, bool needSending)
+        private async void RunMfrcontents(object sender, string routingKey, bool needSending)
         {
-            // var tblTasks = DAL.RabbitSendlerData.GetTasks();
+            var tblTasks = await Task.Run(DAL.RabbitSendlerData.LoadOneTask);
             var i = 0;
-            //foreach (DataRow task in tblTasks.Rows)
+            foreach (DataRow task in tblTasks.Rows)
             {
                 try
                 {
-                    //var tbl = DAL.RabbitSendlerData.GetProdInTask(task["ID_TASK"].ToString());
-                    var tbl = DAL.RabbitSendlerData.GetProdInTask("64534");
+                    var tbl = await Task.Run(()=> DAL.RabbitSendlerData.GetProdInTask(task["ID_TASK"].ToString()));
+                   // var tbl = DAL.RabbitSendlerData.GetProdInTask("64534");
                    
                     var sb = new StringBuilder();
                     MessagetProdinTask mess = null;
@@ -223,12 +221,12 @@ namespace SezXmlSendler
                     }
                     if (mess != null)
                     {
-                        var str = Sendler.SerializeObject(mess.GetType(), mess);
+                        var str = await Task.Run(()=> Sendler.SerializeObject(mess.GetType(), mess));
                         sb.AppendLine(str);
                         tbLog.Text = sb.ToString();
                         if (needSending)
                         {
-                            Sendler.Send(str, routingKey);
+                            await Task.Run(()=> Sendler.Send(str, routingKey));
                             i += 1;
                             tbLog.Text += $"отправлено {i} пакетов";
                         }
