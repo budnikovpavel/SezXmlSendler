@@ -7,6 +7,7 @@ using KernelUI;
 using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
+using SezXmlSendler.Model;
 
 namespace SezXmlSendler
 {
@@ -152,7 +153,9 @@ namespace SezXmlSendler
        
         private async void RunMfrcontents(object sender, string routingKey, bool needSending)
         {
+            var sendler = sender as Sendler;
             var tblTasks = await Task.Run(DAL.RabbitSendlerData.LoadOneTask);
+           
             var i = 0;
             foreach (DataRow task in tblTasks.Rows)
             {
@@ -162,7 +165,7 @@ namespace SezXmlSendler
                    // var tbl = DAL.RabbitSendlerData.GetProdInTask("64534");
                    
                     var sb = new StringBuilder();
-                    MessagetProdinTask mess = null;
+                    MessageProdInTask mess = null;
 
                     var g = new Guid();
 
@@ -178,7 +181,7 @@ namespace SezXmlSendler
                         {
                             idTask = item["ID_TASK"].ToString();
 
-                            mess = new MessagetProdinTask(item);
+                            mess = new MessageProdInTask(item);
                             
                         }
                         if (uzelId != item["ITEMID"].ToString()) // узел
@@ -224,10 +227,12 @@ namespace SezXmlSendler
                         var str = await Task.Run(()=> Sendler.SerializeObject(mess.GetType(), mess));
                         sb.AppendLine(str);
                         tbLog.Text = sb.ToString();
+                        
                         if (needSending)
                         {
                             await Task.Run(()=> Sendler.Send(str, routingKey));
                             i += 1;
+                            
                             tbLog.Text += $"отправлено {i} пакетов";
                         }
                     }
@@ -239,7 +244,7 @@ namespace SezXmlSendler
             }
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private async void timer1_Tick(object sender, EventArgs e)
         {
             var time = DateTime.Now;
             if(checkedListBoxTasks.CheckedItems.Count>0)
@@ -249,7 +254,7 @@ namespace SezXmlSendler
                     if (sen == null) return;
                     if (sen.TimeRunning.TimeOfDay == time.TimeOfDay)
                     {
-                        sen.RunningAsync(checkBoxNeedSend.Checked);
+                         await sen.RunningAsync(checkBoxNeedSend.Checked);
                     }
                 }
            

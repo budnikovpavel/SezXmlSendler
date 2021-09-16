@@ -143,6 +143,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\EventObject.cs" />
     <Compile Include="Extantions\AttributeExtantions.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
@@ -150,8 +151,27 @@
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="MessageObject.cs" />
+    <Compile Include="Model\EventObjectProdInTask.cs" />
+    <Compile Include="Model\EventObjectProducts.cs" />
+    <Compile Include="Model\ImportedOrder.cs" />
+    <Compile Include="Model\ImportedProdInTask.cs" />
+    <Compile Include="Model\ImportedProduct.cs" />
+    <Compile Include="Model\ImportedProductProperties.cs" />
+    <Compile Include="Model\ImportedSostavIzd.cs" />
+    <Compile Include="Model\ImportedSostavIzdMarshrutOperation.cs" />
+    <Compile Include="Model\ImportedSostavIzdMarshrutPoint.cs" />
+    <Compile Include="Model\ImportedSostavIzdNode.cs" />
+    <Compile Include="Model\ImportedSostavIzdTechMarshrut.cs" />
+    <Compile Include="Model\Interfaces\ISerializable.cs" />
+    <Compile Include="Model\MessageObject.cs" />
     <Compile Include="Model\BindingAttribute.cs" />
+    <Compile Include="Model\MessageObjectProducts.cs" />
+    <Compile Include="Model\MessageProdInTask.cs" />
+    <Compile Include="Model\OrderSpecification.cs" />
+    <Compile Include="Model\OrderSpecificationString.cs" />
+    <Compile Include="Model\ProductOptionsProperty.cs" />
+    <Compile Include="Model\ProductOptionsSettings.cs" />
+    <Compile Include="Model\Utf8StringWriter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sendler.cs" />
@@ -183,5 +203,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

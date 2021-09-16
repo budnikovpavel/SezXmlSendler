@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using SezXmlSendler.Model;
 
 namespace SezXmlSendler
 {
@@ -23,6 +24,7 @@ namespace SezXmlSendler
         public event ErrorEventHandler OnError;
         public event SendEventHandler OnRun;
         public event LogEventHandler OnSended;
+        public event LogEventHandler OnLog;
         public DateTime TimeRunning { get; set; }
 
         public string Name { get; set; }
@@ -39,6 +41,8 @@ namespace SezXmlSendler
                     try
                     {
                         sourceTbl = OnLoadTable?.Invoke(this);
+                        if (sourceTbl != null)
+                            OnLog?.Invoke(this, $"Загрузили таблицу с данными: найдено строк {sourceTbl.Rows.Count}");
                     }
                     catch (Exception err) { OnError?.Invoke(this, new ErrorEventArgs(err)); }
                     if (sourceTbl != null)
