@@ -50,9 +50,14 @@ namespace SezXmlSendler
             this.tbHost = new System.Windows.Forms.TextBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.checkedListBoxTasks = new System.Windows.Forms.CheckedListBox();
-            this.buttonClearLog = new System.Windows.Forms.Button();
-            this.tbLog = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.tabControl = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.buttonClearInfo = new System.Windows.Forms.Button();
+            this.tbDataInfo = new System.Windows.Forms.TextBox();
+            this.btnClearLog = new System.Windows.Forms.Button();
+            this.tbLog = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownIntervalRunning)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numPort)).BeginInit();
@@ -60,6 +65,9 @@ namespace SezXmlSendler
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.tabControl.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // numericUpDownIntervalRunning
@@ -275,8 +283,7 @@ namespace SezXmlSendler
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.buttonClearLog);
-            this.splitContainer1.Panel2.Controls.Add(this.tbLog);
+            this.splitContainer1.Panel2.Controls.Add(this.tabControl);
             this.splitContainer1.Size = new System.Drawing.Size(787, 370);
             this.splitContainer1.SplitterDistance = 262;
             this.splitContainer1.TabIndex = 11;
@@ -291,33 +298,90 @@ namespace SezXmlSendler
             this.checkedListBoxTasks.TabIndex = 5;
             this.checkedListBoxTasks.SelectedIndexChanged += new System.EventHandler(this.CheckedListBoxTasks_SelectedIndexChanged);
             // 
-            // buttonClearLog
+            // timer1
             // 
-            this.buttonClearLog.Location = new System.Drawing.Point(3, 3);
-            this.buttonClearLog.Name = "buttonClearLog";
-            this.buttonClearLog.Size = new System.Drawing.Size(131, 37);
-            this.buttonClearLog.TabIndex = 24;
-            this.buttonClearLog.Text = "Очистить";
-            this.buttonClearLog.UseVisualStyleBackColor = true;
-            this.buttonClearLog.Click += new System.EventHandler(this.buttonClearLog_Click);
+            this.timer1.Enabled = true;
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // tabControl
+            // 
+            this.tabControl.Controls.Add(this.tabPage1);
+            this.tabControl.Controls.Add(this.tabPage2);
+            this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl.Location = new System.Drawing.Point(0, 0);
+            this.tabControl.Name = "tabControl";
+            this.tabControl.SelectedIndex = 0;
+            this.tabControl.Size = new System.Drawing.Size(521, 370);
+            this.tabControl.TabIndex = 12;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.buttonClearInfo);
+            this.tabPage1.Controls.Add(this.tbDataInfo);
+            this.tabPage1.Location = new System.Drawing.Point(4, 25);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(513, 341);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Данные";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.btnClearLog);
+            this.tabPage2.Controls.Add(this.tbLog);
+            this.tabPage2.Location = new System.Drawing.Point(4, 25);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(513, 341);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Лог";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // buttonClearInfo
+            // 
+            this.buttonClearInfo.Location = new System.Drawing.Point(6, 6);
+            this.buttonClearInfo.Name = "buttonClearInfo";
+            this.buttonClearInfo.Size = new System.Drawing.Size(131, 29);
+            this.buttonClearInfo.TabIndex = 26;
+            this.buttonClearInfo.Text = "Очистить";
+            this.buttonClearInfo.UseVisualStyleBackColor = true;
+            this.buttonClearInfo.Click += new System.EventHandler(this.buttonClearInfo_Click);
+            // 
+            // tbDataInfo
+            // 
+            this.tbDataInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbDataInfo.Location = new System.Drawing.Point(-4, 41);
+            this.tbDataInfo.Multiline = true;
+            this.tbDataInfo.Name = "tbDataInfo";
+            this.tbDataInfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbDataInfo.Size = new System.Drawing.Size(512, 297);
+            this.tbDataInfo.TabIndex = 25;
+            // 
+            // btnClearLog
+            // 
+            this.btnClearLog.Location = new System.Drawing.Point(10, 4);
+            this.btnClearLog.Name = "btnClearLog";
+            this.btnClearLog.Size = new System.Drawing.Size(131, 29);
+            this.btnClearLog.TabIndex = 28;
+            this.btnClearLog.Text = "Очистить";
+            this.btnClearLog.UseVisualStyleBackColor = true;
+            this.btnClearLog.Click += new System.EventHandler(this.btnClearLog_Click);
             // 
             // tbLog
             // 
             this.tbLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbLog.Location = new System.Drawing.Point(0, 46);
+            this.tbLog.Location = new System.Drawing.Point(0, 39);
             this.tbLog.Multiline = true;
             this.tbLog.Name = "tbLog";
             this.tbLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbLog.Size = new System.Drawing.Size(521, 324);
-            this.tbLog.TabIndex = 0;
-            // 
-            // timer1
-            // 
-            this.timer1.Enabled = true;
-            this.timer1.Interval = 1000;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.tbLog.Size = new System.Drawing.Size(512, 297);
+            this.tbLog.TabIndex = 27;
             // 
             // FormMain
             // 
@@ -338,9 +402,13 @@ namespace SezXmlSendler
             ((System.ComponentModel.ISupportInitialize)(this.numPort)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.tabControl.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -366,10 +434,15 @@ namespace SezXmlSendler
         private System.Windows.Forms.TextBox tbExchangeName;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.CheckedListBox checkedListBoxTasks;
-        private System.Windows.Forms.TextBox tbLog;
-        private System.Windows.Forms.Button buttonClearLog;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.CheckBox checkBoxNeedSend;
+        private System.Windows.Forms.TabControl tabControl;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.Button buttonClearInfo;
+        private System.Windows.Forms.TextBox tbDataInfo;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.Button btnClearLog;
+        private System.Windows.Forms.TextBox tbLog;
     }
 }
 
