@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 using SezXmlSendler.Extantions;
 using SezXmlSendler.Model.Interfaces;
 
-namespace SezXmlSendler.Model
+namespace SezXmlSendler.Model.OrderSpecificationsObjects
 {
     public class ImportedSostavIzdMarshrutPoint : ISerializable
     {

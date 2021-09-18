@@ -3,9 +3,9 @@ using System.Xml.Serialization;
 using SezXmlSendler.Extantions;
 using SezXmlSendler.Model.Interfaces;
 
-namespace SezXmlSendler.Model
+namespace SezXmlSendler.Model.OrdersObjects
 {
-    public class ImportedOrder : ISerializable
+    public class OrderObject : ISerializable
     {
         [XmlAttribute(AttributeName = "Тип"), Binding(StaticValue = "Электрические машины")]
         public string ObjectType { get; set; }
@@ -29,11 +29,11 @@ namespace SezXmlSendler.Model
         [XmlElement(ElementName = "Спецификация", IsNullable = true)]
         public OrderSpecification Specification { get; set; }
 
-        public ImportedOrder(DataRow sourceRow)
+        public OrderObject(DataRow sourceRow)
         {
             this.GetBindingAttributeValues(sourceRow);
             Specification = new OrderSpecification(sourceRow);
         }
-        public ImportedOrder() { }
+        public OrderObject() { }
     }
 }

@@ -3,6 +3,7 @@ using System.Data;
 using System.Xml.Serialization;
 using SezXmlSendler.Extantions;
 using SezXmlSendler.Model.Interfaces;
+using SezXmlSendler.Model.OrderSpecificationsObjects;
 
 namespace SezXmlSendler.Model
 {

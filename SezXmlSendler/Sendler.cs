@@ -2,11 +2,11 @@
 using System;
 using System.Data;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using SezXmlSendler.Model;
+using SezXmlSendler.Model.Abstract;
 using SezXmlSendler.Model.Interfaces;
 
 namespace SezXmlSendler
@@ -14,30 +14,39 @@ namespace SezXmlSendler
     public partial class Sendler<TBaseMessageObject> : ISendler
         where TBaseMessageObject : BaseMessageObject
     {
-        private readonly Func<DataRow, DataTable> _filledTable;
+        private readonly Func<DataRow, string, DataTable> _filledTable;
+        private readonly Action<ISendler, int> _processingPercent;
 
-        public delegate DataTable LoadTableEventHandler(object sender);
+        public delegate DataTable LoadTableAction<T>(out T key);
 
         public delegate void SerializeObjectEventHandler(object sender, string serialize);
 
         public delegate void LogEventHandler(object sender, string log);
 
-        public event LoadTableEventHandler OnLoadTable;
-        public event LoadTableEventHandler OnFilledTable;
         public event SerializeObjectEventHandler OnSerializeObject;
         public event ErrorEventHandler OnError;
         public event LogEventHandler OnSended;
         public event LogEventHandler OnLog;
+        public LoadTableAction<string> OnLoadTable;
+
+        private int? _processingPercentValue;
         public DateTime TimeRunning { get; set; }
+
+        public bool Cancel { get; set; } = true;
+
+
+        public bool IsRunning => !Cancel;
+
 
         public async Task RunningAsync(bool needSend)
         {
-
+            Cancel = false;
+            var key = string.Empty;
             DataTable sourceTbl = null;
             try
             {
 
-                if (OnLoadTable != null) sourceTbl = OnLoadTable.Invoke(this);
+                if (OnLoadTable != null) sourceTbl = OnLoadTable.Invoke(out key);
                 if (sourceTbl != null)
                     showLog($"Загрузили таблицу с данными: найдено строк {sourceTbl.Rows.Count}");
 
@@ -45,6 +54,7 @@ namespace SezXmlSendler
             catch (Exception err)
             {
                 if (OnError != null) OnError.Invoke(this, new ErrorEventArgs(err));
+                Name = _stockName;
             }
 
 
@@ -53,10 +63,16 @@ namespace SezXmlSendler
                 var i = 1;
                 foreach (DataRow item in sourceTbl.Rows)
                 {
-
-                    var idTask = item.Table.Columns.Contains("ID_TASK") ? $" - Заказ {item["ID_TASK"]}" : "";
-                    showLog($"{idTask} обрабатываем строку {i} из {sourceTbl.Rows.Count} ");
-
+                    
+                    var keyValue = item.Table.Columns.Contains(key) ? $" - Ключ {item[key]}" : "";
+                    showLog($"{keyValue} обрабатываем строку {i} из {sourceTbl.Rows.Count} ");
+                    if (_processingPercent != null)
+                    {
+                        _processingPercentValue = (int)Math.Round(i / (float)sourceTbl.Rows.Count * 100);
+                        Name = ToString();
+                        _processingPercent(this, (int)_processingPercentValue);
+                    }
+                   
                     var mess = Activator.CreateInstance(typeof(TBaseMessageObject));
                     showLog($"Инициализировался объект {mess}");
                     if ((mess as IFillOnRow) != null)
@@ -71,9 +87,9 @@ namespace SezXmlSendler
                             try
                             {
 
-                                if (OnFilledTable != null)
+                                if (_filledTable != null)
                                 {
-                                    var fillTbl = OnFilledTable(item);
+                                    var fillTbl = _filledTable(item, key);
                                     ((mess as IFillOnTable)).FillOnTable(fillTbl);
                                 }
                             }
@@ -81,6 +97,7 @@ namespace SezXmlSendler
                             {
                                 if (OnError != null)
                                     OnError(this, new ErrorEventArgs(new Exception($" Ошибка загрузки данных из таблицы : {err.Message}")));
+                                Name = _stockName;
                             }
                             showLog($"Заполнили объект {mess} данными из таблицы");
                         }
@@ -103,15 +120,22 @@ namespace SezXmlSendler
                     {
                         if (OnError != null)
                             OnError(this, new ErrorEventArgs(new Exception($" Ошибка: {err.Message}")));
-                        if (OnLog != null) OnLog.Invoke(this, $"Ошибка : {err.Message}");
+                        Name = _stockName;
 
                     }
 
                     i += 1;
+                    if (Cancel)
+                    {
+                        Name = _stockName;
+                        _processingPercentValue = null;
+                        showLog("Операция отменена!");
+                        return;
+                    }
                 }
             }
-
-            showLog($"Операция прошла успешно");
+            _processingPercentValue = null;
+            showLog("Операция прошла успешно");
         }
 
         private void showLog(string messageLog)
@@ -120,19 +144,36 @@ namespace SezXmlSendler
         }
 
         public string RoutingKey { get; set; }
-
+        private string _stockName;
         public string Name { get; set; }
-        public Sendler(string name, string routingKey, Func<DataRow, DataTable> filledTable = default)
+        public Sendler(string name, string routingKey,
+            LoadTableAction<string> loadTable = default,
+            Func<DataRow, string, DataTable> filledTable = default,
+            Action<ISendler, int> processing = default)
         {
+            _stockName = name;
             Name = name;
             RoutingKey = routingKey;
+            OnLoadTable = loadTable;
             _filledTable = filledTable;
+            _processingPercent = processing;
         }
 
-        public override string ToString() => Name;
+        public override string ToString()
+        {
+            
+            var time = TimeRunning != null ? $"время запуска {TimeRunning.TimeOfDay}" : "";
+            var processing = _processingPercentValue != null ? $" - {_processingPercentValue}%" : time;
+            var result = $"{_stockName} {processing}";
+            
+            return result;
+
+        }
 
         public string SerializeObject(object obj)
         {
+
+
             string utf8;
             var serializer = new XmlSerializer(obj.GetType());
             using (StringWriter writer = new Utf8StringWriter())

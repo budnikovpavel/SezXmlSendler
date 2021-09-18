@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Xml.Serialization;
-using SezXmlSendler.Model.Interfaces;
+using SezXmlSendler.Model.Abstract;
+using SezXmlSendler.Model.OrderSpecificationsObjects;
 
-namespace SezXmlSendler.Model
+namespace SezXmlSendler.Model.OrdersObjects
 {
     [Serializable]
     public class MessageObjectProducts : BaseMessageObject

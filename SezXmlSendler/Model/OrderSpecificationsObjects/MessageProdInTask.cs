@@ -3,9 +3,10 @@ using System.Data;
 using System.Linq;
 using System.Xml.Serialization;
 using SezXmlSendler.Extantions;
+using SezXmlSendler.Model.Abstract;
 using SezXmlSendler.Model.Interfaces;
 
-namespace SezXmlSendler.Model
+namespace SezXmlSendler.Model.OrderSpecificationsObjects
 {
     [Serializable]
     [XmlType("Сообщение")]

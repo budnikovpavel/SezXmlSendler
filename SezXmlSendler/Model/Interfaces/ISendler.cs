@@ -11,12 +11,15 @@ namespace SezXmlSendler.Model.Interfaces
         /// <summary>
         /// Наименование задачи
         /// </summary>
-        public string Name { get; set; }
+        string Name { get; set; }
         /// <summary>
         /// Код задачи
         /// </summary>
-        public string RoutingKey { get; set; }
-        public DateTime TimeRunning { get; set; }
+        string RoutingKey { get; set; }
+        DateTime TimeRunning { get; set; }
+
+        bool Cancel { get; set; }
+        bool IsRunning { get; }
         public Task RunningAsync(bool needSend);
     }
     

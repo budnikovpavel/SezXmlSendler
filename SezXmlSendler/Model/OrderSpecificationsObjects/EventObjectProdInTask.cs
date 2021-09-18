@@ -5,7 +5,7 @@ using ERP_DAL;
 using SezXmlSendler.Extantions;
 using SezXmlSendler.Model.Interfaces;
 
-namespace SezXmlSendler.Model
+namespace SezXmlSendler.Model.OrderSpecificationsObjects
 {
     public class EventObjectProdInTask : ISerializable
     {

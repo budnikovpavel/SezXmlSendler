@@ -6,7 +6,11 @@ using System.Collections.Generic;
 using KernelUI;
 using System.Threading.Tasks;
 using SezXmlSendler.Model;
+using SezXmlSendler.Model.Abstract;
 using SezXmlSendler.Model.Interfaces;
+using SezXmlSendler.Model.LZKDocumentObjects;
+using SezXmlSendler.Model.OrdersObjects;
+using SezXmlSendler.Model.OrderSpecificationsObjects;
 
 namespace SezXmlSendler
 {
@@ -19,8 +23,6 @@ namespace SezXmlSendler
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-            var s = new Sendler<MessageProdInTask>("", "");
-            var str = s.SerializeObject(new MessageProdInTask());
 
             if (Environment.MachineName != "COMP")
                 if (!FormConnection.OpenConnection())
@@ -29,13 +31,18 @@ namespace SezXmlSendler
                     return;
                 }
 
+            dateTimeBegin.Value = DateTime.Now.AddDays(-DateTime.Now.Day + 1);
+            dateTimeEnd.Value = DateTime.Now;
+
             SetConnectionsParams(true);
 
-            var sen = new Sendler<MessageObject>("Выгрузка заказов", "mfrorders")
+            var sen = new Sendler<OrderMessageObject>("Выгрузка заказов", "mfrorders",
+                LoadPlan,
+                null, OnShowPercent)
             {
                 TimeRunning = new DateTime(2021, 1, 1, hour: 19, minute: 0, second: 0)
             };
-            sen.OnLoadTable += LoadPlan;
+
             sen.OnSerializeObject += Sen_OnSerializeObject;
             sen.OnSended += Sen_OnSerializeObject;
             sen.OnError += Sen_OnError;
@@ -44,20 +51,35 @@ namespace SezXmlSendler
 
 
 
-            var sen2 = new Sendler<MessageProdInTask>("Структура продукта в заказе", "mfrcontents")
+            var sen2 = new Sendler<MessageProdInTask>("Структура продукта в заказе", "mfrcontents",
+                LoadPlan,
+                Sen2_OnFilledTable, OnShowPercent)
             {
                 TimeRunning = new DateTime(2021, 1, 1, hour: 19, minute: 0, second: 0)
             };
-            sen2.OnLoadTable += LoadPlan;
+
             sen2.OnSerializeObject += Sen_OnSerializeObject;
             sen2.OnSended += Sen_OnSerializeObject;
             sen2.OnError += Sen_OnError;
             sen2.OnLog += Sen_OnLog;
-            sen2.OnFilledTable += Sen2_OnFilledTable; 
+
             _taskList.Add(sen2);
 
+            var sen3 = new Sendler<LzkMessageObject>("Выгрузка выдачи материалов по ЛЗК", "mfrcontents",
+                (LoadLzkDocuments),
+                (row, keyField) => DAL.RabbitSendlerData.GetLZKDocumentSpecification(row[keyField].ToString())
+                , OnShowPercent)
+            {
+                TimeRunning = new DateTime(2021, 1, 1, hour: 19, minute: 0, second: 0)
+            };
 
-            numericUpDownIntervalRunning.Maximum = int.MaxValue;
+            sen3.OnSerializeObject += Sen_OnSerializeObject;
+            sen3.OnSended += Sen_OnSerializeObject;
+            sen3.OnError += Sen_OnError;
+            sen3.OnLog += Sen_OnLog;
+
+            _taskList.Add(sen3);
+
             foreach (var item in _taskList)
             {
                 checkedListBoxTasks.Items.Add(item);
@@ -65,17 +87,22 @@ namespace SezXmlSendler
             }
         }
 
-        private DataTable Sen2_OnFilledTable(object sender)
-        {
-            return DAL.RabbitSendlerData.GetProdInTask((sender as DataRow)?["ID_TASK"].ToString());
-        }
+        private void OnShowPercent(ISendler arg1, int arg2)=>
+            checkedListBoxTasks.Refresh();
 
-        private void Sen_OnLog(object sender, string log)
-        {
+
+        private DataTable LoadLzkDocuments(out string keyField)=>
+           DAL.RabbitSendlerData.GetLZKDocuments(new SEZ.DatePeriod(dateTimeBegin.Value, dateTimeEnd.Value), out keyField);
+
+        private DataTable Sen2_OnFilledTable(DataRow row, string keyField) =>
+            DAL.RabbitSendlerData.GetProdInTask(row[keyField].ToString());
+
+
+        private void Sen_OnLog(object sender, string log) =>
             tbLog.Invoke((MethodInvoker)(() =>
                 tbLog.Text += $@"{DateTime.Now} - отправитель {((ISendler)sender).RoutingKey}: {log}" + Environment.NewLine
             ));
-        }
+
 
         private void Sen_OnError(object sender, System.IO.ErrorEventArgs e) =>
             tbLog.Invoke((MethodInvoker)(() => tbLog.Text += e.GetException().Message + Environment.NewLine));
@@ -85,8 +112,11 @@ namespace SezXmlSendler
             tbDataInfo.Invoke((MethodInvoker)(() => tbDataInfo.Text = serialize + Environment.NewLine));
 
 
-        private DataTable LoadPlan(object sender) =>
-            DAL.RabbitSendlerData.LoadOneTask();
+        private DataTable LoadPlan(out string keyField)
+        {
+            keyField = "ID_TASK";
+            return DAL.RabbitSendlerData.LoadOneTask();
+        }
 
         private void SetConnectionsParams(bool fromSettings)
         {
@@ -121,7 +151,6 @@ namespace SezXmlSendler
         {
             if (checkedListBoxTasks.SelectedItem is ISendler sen)
             {
-                numericUpDownIntervalRunning.Value = 0;
                 tbRoutingKey.Text = sen.RoutingKey;
             }
 
@@ -130,10 +159,16 @@ namespace SezXmlSendler
         private void buttonRunSelectedTask_Click(object sender, EventArgs e)
         {
             if (!(checkedListBoxTasks.SelectedItem is ISendler sen)) return;
+            if (sen.IsRunning)
+            {
+                MessageBox.Show("Задача уже запущена");
+                return;
+            }
+
             if (MessageBox.Show($"Запустить {sen.Name} ?") != DialogResult.OK) return;
 
             Task.Run(() => { sen.RunningAsync(checkBoxNeedSend.Checked).Wait(-1); });
-           
+
         }
 
         private void buttonTestConnection_Click(object sender, EventArgs e)
@@ -184,6 +219,15 @@ Password: {RabbitMQConnectionParameters.Password}
         private void btnClearLog_Click(object sender, EventArgs e)
         {
             tbLog.Clear();
+        }
+
+        private void btnCancelTask_Click(object sender, EventArgs e)
+        {
+            if (checkedListBoxTasks.SelectedItem is ISendler sen)
+            {
+                if (MessageBox.Show($"Хотите отменить {sen.Name}? ", "Отменить задачу", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    sen.Cancel = true;
+            }
         }
     }
 }

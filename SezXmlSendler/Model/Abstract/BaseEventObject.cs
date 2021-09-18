@@ -5,9 +5,12 @@ using ERP_DAL;
 using SezXmlSendler.Extantions;
 using SezXmlSendler.Model.Interfaces;
 
-namespace SezXmlSendler.Model
+namespace SezXmlSendler.Model.Abstract
 {
-    public class EventObject : ISerializable
+    /// <summary>
+    /// Класс базового события для отправки сообщения
+    /// </summary>
+    public class BaseEventObject: ISerializable
     {
         [XmlAttribute(AttributeName = "ТипСобытия"), Binding(StaticValue = "РучнаяВыгрузка")]
         public string EventType { get; set; }
@@ -15,16 +18,16 @@ namespace SezXmlSendler.Model
         public string EventDate { get; set; }
         [XmlAttribute(AttributeName = "Пользователь")]
         public string User { get; set; }
-        [XmlElement(ElementName = "Объект", IsNullable = true)]
-        public ImportedOrder Object { get; set; }
 
-        public EventObject(DataRow sourceRow)
+        public BaseEventObject()
+        {
+        }
+
+        public BaseEventObject(DataRow sourceRow)
         {
             this.GetBindingAttributeValues(sourceRow);
             EventDate = DateTime.Now.ToString();
             User = DAL.User;
-            Object = new ImportedOrder(sourceRow);
         }
-        public EventObject() { }
     }
 }

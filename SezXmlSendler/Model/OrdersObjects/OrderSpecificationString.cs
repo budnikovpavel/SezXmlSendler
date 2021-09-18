@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 using SezXmlSendler.Extantions;
 using SezXmlSendler.Model.Interfaces;
 
-namespace SezXmlSendler.Model
+namespace SezXmlSendler.Model.OrdersObjects
 {
     public class OrderSpecificationString : ISerializable
     {

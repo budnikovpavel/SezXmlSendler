@@ -2,7 +2,7 @@
 using System.Xml.Serialization;
 using SezXmlSendler.Model.Interfaces;
 
-namespace SezXmlSendler.Model
+namespace SezXmlSendler.Model.Abstract
 {
     [Serializable]
     [XmlType("Базовое сообщение")]
@@ -20,6 +20,9 @@ namespace SezXmlSendler.Model
         [XmlAttribute(AttributeName = "ВерсияАгента"), Binding(StaticValue = "1")]
         public virtual string AgentVersion { get; set; }
 
+        public BaseMessageObject()
+        {
+        }
     }
     
 }

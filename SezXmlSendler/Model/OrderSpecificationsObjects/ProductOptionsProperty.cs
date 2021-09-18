@@ -1,7 +1,7 @@
 ﻿using System.Xml.Serialization;
 using SezXmlSendler.Model.Interfaces;
 
-namespace SezXmlSendler.Model
+namespace SezXmlSendler.Model.OrderSpecificationsObjects
 {
     public class ProductOptionsProperty : ISerializable
     {
