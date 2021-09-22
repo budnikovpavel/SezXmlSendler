@@ -15,8 +15,6 @@ namespace SezXmlSendler.Model.LZKDocumentObjects
         [XmlElement(ElementName = "Событие", IsNullable = true)]
         public LzkEventObject Event { get; set; }
 
-        public LzkMessageObject() { }
-       
         public void FillOnTable(DataTable tbl)
         {
             foreach (DataRow dataRow in tbl.Rows)
