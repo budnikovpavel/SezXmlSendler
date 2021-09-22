@@ -424,6 +424,7 @@ namespace SezXmlSendler
             this.Controls.Add(this.groupBox1);
             this.Name = "FormMain";
             this.Text = "Клиент RabbitMQ";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

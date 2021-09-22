@@ -3,19 +3,25 @@ using System.Data;
 using System.Windows.Forms;
 using ERP_DAL;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using KernelUI;
 using System.Threading.Tasks;
-using SezXmlSendler.Model;
 using SezXmlSendler.Model.Abstract;
 using SezXmlSendler.Model.Interfaces;
 using SezXmlSendler.Model.LZKDocumentObjects;
 using SezXmlSendler.Model.OrdersObjects;
 using SezXmlSendler.Model.OrderSpecificationsObjects;
+using System.Text;
+using Newtonsoft.Json;
+using SezXmlSendler.Model;
 
 namespace SezXmlSendler
 {
     public partial class FormMain : Form
     {
+
+
         readonly List<ISendler> _taskList = new();
         public FormMain()
         {
@@ -23,6 +29,12 @@ namespace SezXmlSendler
         }
         private void Form1_Load(object sender, EventArgs e)
         {
+
+
+            using var reader = new StreamReader(SendlersCongif.PathConfig, Encoding.UTF8);
+            var text = reader.ReadToEnd();
+            var jsonDe = JsonConvert.DeserializeObject<SendlersCongif>(text);
+
 
             if (Environment.MachineName != "COMP")
                 if (!FormConnection.OpenConnection())
@@ -36,45 +48,45 @@ namespace SezXmlSendler
 
             SetConnectionsParams(true);
 
-            var sen = new Sendler<OrderMessageObject>("Выгрузка заказов", "mfrorders",
+            var sen = new Sendler<OrderMessageObject>(jsonDe.SendlerParam[0].Name, jsonDe.SendlerParam[0].RoutingKey,
                 LoadPlan,
                 null, OnShowPercent)
             {
-                TimeRunning = new DateTime(2021, 1, 1, hour: 19, minute: 0, second: 0)
+                TimeRunning = Convert.ToDateTime(jsonDe.SendlerParam[0].Time)
             };
 
             sen.OnSerializeObject += Sen_OnSerializeObject;
-            sen.OnSended += Sen_OnSerializeObject;
+            sen.OnSended += Sen_OnLog;
             sen.OnError += Sen_OnError;
             sen.OnLog += Sen_OnLog;
             _taskList.Add(sen);
 
 
 
-            var sen2 = new Sendler<MessageProdInTask>("Структура продукта в заказе", "mfrcontents",
+            var sen2 = new Sendler<MessageProdInTask>(jsonDe.SendlerParam[1].Name, jsonDe.SendlerParam[1].RoutingKey,
                 LoadPlan,
                 Sen2_OnFilledTable, OnShowPercent)
             {
-                TimeRunning = new DateTime(2021, 1, 1, hour: 19, minute: 0, second: 0)
+                TimeRunning = Convert.ToDateTime(jsonDe.SendlerParam[1].Time)
             };
 
             sen2.OnSerializeObject += Sen_OnSerializeObject;
-            sen2.OnSended += Sen_OnSerializeObject;
+            sen2.OnSended += Sen_OnLog;
             sen2.OnError += Sen_OnError;
             sen2.OnLog += Sen_OnLog;
 
             _taskList.Add(sen2);
 
-            var sen3 = new Sendler<LzkMessageObject>("Выгрузка выдачи материалов по ЛЗК", "mfrcontents",
+            var sen3 = new Sendler<LzkMessageObject>(jsonDe.SendlerParam[2].Name, jsonDe.SendlerParam[2].RoutingKey,
                 (LoadLzkDocuments),
                 (row, keyField) => DAL.RabbitSendlerData.GetLZKDocumentSpecification(row[keyField].ToString())
                 , OnShowPercent)
             {
-                TimeRunning = new DateTime(2021, 1, 1, hour: 19, minute: 0, second: 0)
+                TimeRunning = Convert.ToDateTime(jsonDe.SendlerParam[2].Time)
             };
 
             sen3.OnSerializeObject += Sen_OnSerializeObject;
-            sen3.OnSended += Sen_OnSerializeObject;
+            sen3.OnSended += Sen_OnLog;
             sen3.OnError += Sen_OnError;
             sen3.OnLog += Sen_OnLog;
 
@@ -87,25 +99,56 @@ namespace SezXmlSendler
             }
         }
 
-        private void OnShowPercent(ISendler arg1, int arg2)=>
+        private void OnShowPercent(ISendler arg1, int arg2) =>
             checkedListBoxTasks.Refresh();
 
 
-        private DataTable LoadLzkDocuments(out string keyField)=>
+        private DataTable LoadLzkDocuments(out string keyField) =>
            DAL.RabbitSendlerData.GetLZKDocuments(new SEZ.DatePeriod(dateTimeBegin.Value, dateTimeEnd.Value), out keyField);
 
         private DataTable Sen2_OnFilledTable(DataRow row, string keyField) =>
             DAL.RabbitSendlerData.GetProdInTask(row[keyField].ToString());
 
+        private void WriteToLogFile(string logText)
+        {
+            // запись в файл
+            using (FileStream fstream = new FileStream(Path.Combine(Environment.CurrentDirectory, "RabbitLog.log"), FileMode.Append))
+            {
+                // преобразуем строку в байты
+                byte[] array = System.Text.Encoding.Default.GetBytes(logText);
+                // запись массива байтов в файл
+                fstream.Write(array, 0, array.Length);
+            }
+        }
 
-        private void Sen_OnLog(object sender, string log) =>
-            tbLog.Invoke((MethodInvoker)(() =>
-                tbLog.Text += $@"{DateTime.Now} - отправитель {((ISendler)sender).RoutingKey}: {log}" + Environment.NewLine
-            ));
+        private void Logged(string log)
+        {
+
+            tbLog.Invoke((MethodInvoker)(delegate
+            {
+                var textLog = tbLog.Text + log + Environment.NewLine;
+                if (textLog.Length < 10000)
+                    tbLog.Text = textLog;
+                else
+                {
+                    WriteToLogFile(textLog);
+                    tbLog.Text = log;
+                }
+            }));
+        }
+
+        private void Sen_OnLog(object sender, string log)
+        {
+            var logText = $@"{DateTime.Now} - отправитель {((ISendler)sender).RoutingKey}: {log}" + Environment.NewLine;
+            Logged(logText);
+            if (!((ISendler)sender).IsRunning)
+                WriteToLogFile(logText);
+        }
 
 
         private void Sen_OnError(object sender, System.IO.ErrorEventArgs e) =>
-            tbLog.Invoke((MethodInvoker)(() => tbLog.Text += e.GetException().Message + Environment.NewLine));
+            tbLog.Invoke((MethodInvoker)(() =>
+            tbLog.Text += e.GetException().Message + Environment.NewLine));
 
 
         private void Sen_OnSerializeObject(object sender, string serialize) =>
@@ -161,7 +204,7 @@ namespace SezXmlSendler
             if (!(checkedListBoxTasks.SelectedItem is ISendler sen)) return;
             if (sen.IsRunning)
             {
-                MessageBox.Show("Задача уже запущена");
+                MessageBox.Show($"Задача {sen.Name} уже запущена");
                 return;
             }
 
@@ -173,42 +216,42 @@ namespace SezXmlSendler
 
         private void buttonTestConnection_Click(object sender, EventArgs e)
         {
-            SetConnectionsParams(false);
-            var sendler = new Sendler<BaseMessageObject>("testconnection", tbRoutingKey.Text);
-            try
+            Task.Run(() =>
             {
-                sendler.Send("проверка связи", sendler.RoutingKey);
-                MessageBox.Show("сообщение отправлено");
-                SaveConnectionParams();
-            }
-            catch (Exception err)
-            {
-                MessageBox.Show(
-                    $@"Host:{RabbitMQConnectionParameters.HostName}
+                SetConnectionsParams(false);
+                var sendler = new Sendler<BaseMessageObject>("testconnection", tbRoutingKey.Text);
+                try
+                {
+                    sendler.Send("проверка связи", sendler.RoutingKey);
+                    MessageBox.Show("сообщение отправлено");
+                    SaveConnectionParams();
+                }
+                catch (Exception err)
+                {
+                    MessageBox.Show(
+                        $@"Host:{RabbitMQConnectionParameters.HostName}
 Port: {RabbitMQConnectionParameters.Port}
 User: {RabbitMQConnectionParameters.User}
 Password: {RabbitMQConnectionParameters.Password}
 {err.Message} {(err.InnerException != null ? err.InnerException.Message : string.Empty)}");
 
-            }
-
+                }
+            });
         }
 
 
         private async void timer1_Tick(object sender, EventArgs e)
         {
             var time = DateTime.Now;
-            if (checkedListBoxTasks.CheckedItems.Count > 0)
-                foreach (var item in checkedListBoxTasks.CheckedItems)
+            foreach (var item in checkedListBoxTasks.CheckedItems)
+            {
+                var sen = (item as ISendler);
+                if (sen == null) return;
+                if (sen.TimeRunning.TimeOfDay == time.TimeOfDay)
                 {
-                    var sen = (item as ISendler);
-                    if (sen == null) return;
-                    if (sen.TimeRunning.TimeOfDay == time.TimeOfDay)
-                    {
-                        await sen.RunningAsync(checkBoxNeedSend.Checked);
-                    }
+                    await sen.RunningAsync(checkBoxNeedSend.Checked);
                 }
-
+            }
         }
 
         private void buttonClearInfo_Click(object sender, EventArgs e)
@@ -228,6 +271,13 @@ Password: {RabbitMQConnectionParameters.Password}
                 if (MessageBox.Show($"Хотите отменить {sen.Name}? ", "Отменить задачу", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     sen.Cancel = true;
             }
+        }
+
+        private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (_taskList.Any(sen => sen.IsRunning))
+                e.Cancel = MessageBox.Show("Есть незавершенные задачи, Вы действительно хотите закрыть приложение?",
+                     "Внимание", MessageBoxButtons.YesNo) != DialogResult.Yes;
         }
     }
 }

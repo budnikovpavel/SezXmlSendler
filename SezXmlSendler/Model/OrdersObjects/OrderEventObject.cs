@@ -14,6 +14,9 @@ namespace SezXmlSendler.Model.OrdersObjects
         {
             Object = new OrderObject(sourceRow);
         }
-        
+
+        public OrderEventObject()
+        {
+        }
     }
 }

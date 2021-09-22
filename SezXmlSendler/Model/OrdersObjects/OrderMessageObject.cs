@@ -14,7 +14,7 @@ namespace SezXmlSendler.Model.OrdersObjects
         [XmlElement(ElementName = "Событие", IsNullable = true)]
         public OrderEventObject Event { get; set; }
 
-       // public OrderMessageObject() { }
+        public OrderMessageObject() { }
 
         public void FillOnRow(DataRow sourceRow)
         {

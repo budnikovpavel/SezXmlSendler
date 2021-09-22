@@ -74,11 +74,11 @@ namespace SezXmlSendler
                     }
                    
                     var mess = Activator.CreateInstance(typeof(TBaseMessageObject));
-                    showLog($"Инициализировался объект {mess}");
+                    //showLog($"Инициализировался объект {mess}");
                     if ((mess as IFillOnRow) != null)
                     {
                         (mess as IFillOnRow).FillOnRow(item);
-                        showLog($"Заполнили объект {mess} данными из строки");
+                        //showLog($"Заполнили объект {mess} данными из строки");
                     }
                     else
                     {
@@ -107,7 +107,7 @@ namespace SezXmlSendler
                     {
                         var str = SerializeObject(mess);
 
-                        showLog($"Объект {mess} сериализован");
+                        //showLog($"Объект {mess} сериализован");
                         OnSerializeObject?.Invoke(this, str);
 
                         if (needSend)
@@ -129,13 +129,15 @@ namespace SezXmlSendler
                     {
                         Name = _stockName;
                         _processingPercentValue = null;
-                        showLog("Операция отменена!");
+                        showLog($"Задача {_stockName} отменена!");
                         return;
                     }
                 }
             }
             _processingPercentValue = null;
-            showLog("Операция прошла успешно");
+            Cancel = true;
+            showLog($"Задача {_stockName} выполнена успешно");
+           
         }
 
         private void showLog(string messageLog)
@@ -221,6 +223,4 @@ namespace SezXmlSendler
         public static string Password { get; set; }
         public static string ExchangeName { get; set; }
     }
-
-
 }
