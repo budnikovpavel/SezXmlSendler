@@ -151,13 +151,17 @@ namespace SezXmlSendler
             tbLog.Text += e.GetException().Message + Environment.NewLine));
 
 
-        private void Sen_OnSerializeObject(object sender, string serialize) =>
+        private void Sen_OnSerializeObject(object sender, string serialize)
+        {
             tbDataInfo.Invoke((MethodInvoker)(() => tbDataInfo.Text = serialize + Environment.NewLine));
+            if(checkBoxLogXML.Checked)
+                WriteToLogFile(serialize + Environment.NewLine);
+        }
 
 
         private DataTable LoadPlan(out string keyField)
         {
-            keyField = "ID_TASK";
+            keyField = "ID_TASK"; 
             return DAL.RabbitSendlerData.LoadOneTask();
         }
 

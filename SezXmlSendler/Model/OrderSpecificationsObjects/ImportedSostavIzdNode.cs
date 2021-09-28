@@ -29,7 +29,7 @@ namespace SezXmlSendler.Model
         public string MSize { get; set; }
         [XmlAttribute(AttributeName = "ГОСТ"), Binding(FieldName = "GOST")]
         public string Gost { get; set; }
-        [XmlAttribute(AttributeName = "КЛАСС"), Binding(FieldName = "NCLS")]
+        [XmlAttribute(AttributeName = "КЛАСС"), Binding(FieldName = "NCLM")]
         public string Nclass { get; set; }
         [XmlAttribute(AttributeName = "ПОДКЛАСС"), Binding(FieldName = "NSBCLASS")]
         public string NSubclass { get; set; }

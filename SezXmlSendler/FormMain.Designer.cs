@@ -61,6 +61,7 @@ namespace SezXmlSendler
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.btnCancelTask = new System.Windows.Forms.Button();
+            this.checkBoxLogXML = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numPort)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -95,6 +96,7 @@ namespace SezXmlSendler
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.checkBoxLogXML);
             this.groupBox1.Controls.Add(this.checkBoxNeedSend);
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.label7);
@@ -409,6 +411,17 @@ namespace SezXmlSendler
             this.btnCancelTask.UseVisualStyleBackColor = true;
             this.btnCancelTask.Click += new System.EventHandler(this.btnCancelTask_Click);
             // 
+            // checkBoxLogXML
+            // 
+            this.checkBoxLogXML.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxLogXML.AutoSize = true;
+            this.checkBoxLogXML.Location = new System.Drawing.Point(12, 117);
+            this.checkBoxLogXML.Name = "checkBoxLogXML";
+            this.checkBoxLogXML.Size = new System.Drawing.Size(138, 21);
+            this.checkBoxLogXML.TabIndex = 24;
+            this.checkBoxLogXML.Text = "Логировать XML";
+            this.checkBoxLogXML.UseVisualStyleBackColor = true;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -475,6 +488,7 @@ namespace SezXmlSendler
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button btnCancelTask;
+        private System.Windows.Forms.CheckBox checkBoxLogXML;
     }
 }
 
