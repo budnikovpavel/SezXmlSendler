@@ -24,6 +24,12 @@ namespace SezXmlSendler.Model.OrdersObjects
         [XmlAttribute(AttributeName = "ДатаПлан"), Binding(FieldName = "DATEP2")]
         public string OssDatePlan { get; set; }
         [XmlAttribute(AttributeName = "НомерЧертежа"), Binding(FieldName = "ODSE")]
+        public string OssDatep4 { get; set; }
+        [XmlAttribute(AttributeName = "ДатаОтгрузкиПоДоговору"), Binding(FieldName = "DATEP4")]
+        public string OssDateDoc { get; set; }
+        [XmlAttribute(AttributeName = "ДатаФактическогоВыпуска"), Binding(FieldName = "DATE_DOC")]
+        public string OssNameFirm { get; set; }
+        [XmlAttribute(AttributeName = "Клиент"), Binding(FieldName = "NAME_FIRM")]
         public string OssOdse { get; set; }
         public OrderSpecificationString(DataRow sourceRow)
         {

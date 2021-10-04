@@ -161,8 +161,10 @@ namespace SezXmlSendler
 
         private DataTable LoadPlan(out string keyField)
         {
-            keyField = "ID_TASK"; 
-            return DAL.RabbitSendlerData.LoadOneTask();
+            keyField = "ID_TASK";
+            if (dateTimeBegin.Value == null) dateTimeBegin.Value = DateTime.Now;
+            if (dateTimeEnd.Value == null) dateTimeEnd.Value = DateTime.Now;
+            return DAL.RabbitSendlerData.LoadOneTask(new SEZ.DatePeriod(dateTimeBegin.Value, dateTimeEnd.Value));
         }
 
         private void SetConnectionsParams(bool fromSettings)
