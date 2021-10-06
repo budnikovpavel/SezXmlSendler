@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Xml.Serialization;
 using SezXmlSendler.Extantions;
 using SezXmlSendler.Model.Interfaces;
@@ -8,7 +9,7 @@ namespace SezXmlSendler.Model.LZKDocumentObjects
     public class LzkDocumentObject:ISerializable
     {
         [XmlElement(ElementName = "ТМЦ", IsNullable = true)]
-        public LzkTMCObject LzkTMC { get; set; }
+        public List<LzkTMCObject> LzkTMC { get; set; }
         
         [XmlAttribute(AttributeName = "ВидДокументаВыгрузки"), Binding(StaticValue = "ЛЗК")]
         public string DocumentVid { get; set; }
@@ -38,7 +39,9 @@ namespace SezXmlSendler.Model.LZKDocumentObjects
         public LzkDocumentObject(DataRow sourceRow)
         {
             this.GetBindingAttributeValues(sourceRow);
-            LzkTMC = new LzkTMCObject(sourceRow);
+            if (LzkTMC == null)
+                LzkTMC = new List<LzkTMCObject>();
+            LzkTMC.Add(new LzkTMCObject(sourceRow));
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using System.Windows.Forms;
 using System.Xml.Serialization;
 using SezXmlSendler.Extantions;
 using SezXmlSendler.Model.Abstract;
@@ -17,10 +16,12 @@ namespace SezXmlSendler.Model.LZKDocumentObjects
 
         public void FillOnTable(DataTable tbl)
         {
+            this.GetBindingAttributeValues();
             foreach (DataRow dataRow in tbl.Rows)
             {
-                this.GetBindingAttributeValues(dataRow);
-                Event = new LzkEventObject(dataRow);
+                if (Event == null)
+                    Event = new LzkEventObject(dataRow);
+                else Event.Data.Doc.Document.LzkTMC.Add(new LzkTMCObject(dataRow));
             }
         }
     }

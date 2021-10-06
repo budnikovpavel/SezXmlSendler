@@ -11,13 +11,13 @@ namespace SezXmlSendler.Model.LZKDocumentObjects
         [XmlElement(ElementName = "Док", IsNullable = true)]
         public LzkDocObject Doc { get; set; }
         public LzkDataObject()
-        {
+        { 
         }
 
         public LzkDataObject(DataRow sourceRow)
         {
             this.GetBindingAttributeValues(sourceRow);
-            Doc = new LzkDocObject(sourceRow);
+                Doc = new LzkDocObject(sourceRow);
         }
     }
 }
