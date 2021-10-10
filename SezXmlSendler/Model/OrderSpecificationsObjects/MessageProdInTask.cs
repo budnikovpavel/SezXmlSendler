@@ -30,15 +30,19 @@ namespace SezXmlSendler.Model.OrderSpecificationsObjects
             var uzelId = g.ToString();
             var marshrutPoint = g.ToString();
             var idTp = g.ToString();
+            var way = g.ToString();
             var oper = g.ToString();
-            
+            int i = 0;
             foreach (DataRow item in tbl.Rows)
             {
+                i += 1;
+                var isDetect = false;
                 if (idTask != item["ID_TASK"].ToString())
                 {
                     idTask = item["ID_TASK"].ToString();
                     this.GetBindingAttributeValues(item);
                     Event = new EventObjectProdInTask(item);
+                    isDetect = true;
                 }
                 if (uzelId != item["ITEMID"].ToString()) // узел
                 {
@@ -50,8 +54,9 @@ namespace SezXmlSendler.Model.OrderSpecificationsObjects
                     var node = new ImportedSostavIzdNode(item);
                     if (node.LevelNumber == "0") node.ParentId = string.Empty;
                     Event.Product.SostavIzd.Nodes.Add(node);
+                    isDetect = true;
                 }
-
+               
                 if (idTp != item["ID_TP"].ToString()) // маршрут
                 {
                     marshrutPoint = g.ToString();
@@ -59,7 +64,9 @@ namespace SezXmlSendler.Model.OrderSpecificationsObjects
                     idTp = item["ID_TP"].ToString();
                     Event.Product.SostavIzd.Nodes.Last()
                         .TechMarshruts.Add(new ImportedSostavIzdTechMarshrut(item));
-                }
+                    isDetect = true;
+                } 
+                
                 if (marshrutPoint != item["ORDER_DEP"].ToString())
                 {
                     marshrutPoint = item["ORDER_DEP"].ToString();
@@ -67,6 +74,7 @@ namespace SezXmlSendler.Model.OrderSpecificationsObjects
 
                     Event.Product.SostavIzd.Nodes.Last().TechMarshruts.Last()
                         .Marshrut.Add(new ImportedSostavIzdMarshrutPoint(item));
+                    isDetect = true;
                 };
                 if (oper != item["ORDER_NO"].ToString())
                 {
@@ -75,6 +83,29 @@ namespace SezXmlSendler.Model.OrderSpecificationsObjects
                     Event.Product.SostavIzd.Nodes.Last().TechMarshruts.Last()
                         .Marshrut.Last()
                         .Operations.Add(new ImportedSostavIzdMarshrutOperation(item));
+                    isDetect = true;
+                }
+                if (!isDetect) {
+                    
+                    if (way != item["WAY"].ToString()) // добавляем узел с проверкой по way 
+                    {
+                       
+                        way = item["WAY"].ToString();
+                        var node = new ImportedSostavIzdNode(item);
+                        if (node.LevelNumber == "0") node.ParentId = string.Empty;
+                        Event.Product.SostavIzd.Nodes.Add(node);
+                        Event.Product.SostavIzd.Nodes.Last()
+                            .TechMarshruts.Add(new ImportedSostavIzdTechMarshrut(item));
+                        Event.Product.SostavIzd.Nodes.Last().TechMarshruts.Last()
+                           .Marshrut.Add(new ImportedSostavIzdMarshrutPoint(item));
+                        Event.Product.SostavIzd.Nodes.Last()
+                           .TechMarshruts.Last()
+                           .Marshrut.Last()
+                           .Operations.Add(new ImportedSostavIzdMarshrutOperation(item));
+                       
+                        isDetect = true;
+                        continue;
+                    }
                 }
             }
         }
