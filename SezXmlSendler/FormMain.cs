@@ -253,8 +253,9 @@ Password: {RabbitMQConnectionParameters.Password}
             {
                 var sen = (item as ISendler);
                 if (sen == null) return;
-                if (sen.TimeRunning.TimeOfDay == time.TimeOfDay)
+                if (Math.Abs(Math.Round((time.TimeOfDay - sen.TimeRunning.TimeOfDay).TotalSeconds)) < 3)
                 {
+                    if(!sen.IsRunning)
                     await sen.RunningAsync(checkBoxNeedSend.Checked);
                 }
             }

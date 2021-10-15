@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Linq;
+using System.Windows.Forms;
 using System.Xml.Serialization;
 using SezXmlSendler.Extantions;
 using SezXmlSendler.Model.Abstract;
@@ -85,12 +86,11 @@ namespace SezXmlSendler.Model.OrderSpecificationsObjects
                         .Operations.Add(new ImportedSostavIzdMarshrutOperation(item));
                     isDetect = true;
                 }
-                if (!isDetect) {
-                    
+                if (!isDetect) { // частные случаи 
                     if (way != item["WAY"].ToString()) // добавляем узел с проверкой по way 
                     {
-                       
-                        way = item["WAY"].ToString();
+                        isDetect = true;
+                        
                         var node = new ImportedSostavIzdNode(item);
                         if (node.LevelNumber == "0") node.ParentId = string.Empty;
                         Event.Product.SostavIzd.Nodes.Add(node);
@@ -102,11 +102,20 @@ namespace SezXmlSendler.Model.OrderSpecificationsObjects
                            .TechMarshruts.Last()
                            .Marshrut.Last()
                            .Operations.Add(new ImportedSostavIzdMarshrutOperation(item));
-                       
-                        isDetect = true;
-                        continue;
+                    } else {
+                        //строка является дублем , поэтому суммируем брутто и нетто
+                        var brutto = Convert.ToDecimal(Event.Product.SostavIzd.Nodes.Last()?.QBrutto??"0");
+                        var netto = Convert.ToDecimal(Event.Product.SostavIzd.Nodes.Last()?.QNetto??"0");
+
+                        brutto += Convert.ToDecimal(item["QBRUTTO"].ToString());
+                        netto += Convert.ToDecimal(item["QNETTO"].ToString());
+
+                        Event.Product.SostavIzd.Nodes.Last().QBrutto = brutto.ToString();
+                        Event.Product.SostavIzd.Nodes.Last().QNetto = netto.ToString();
+
                     }
                 }
+                way = item["WAY"].ToString();
             }
         }
     }
