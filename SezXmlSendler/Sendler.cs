@@ -8,6 +8,8 @@ using System.Xml.Serialization;
 using SezXmlSendler.Model;
 using SezXmlSendler.Model.Abstract;
 using SezXmlSendler.Model.Interfaces;
+using RabbitMQ.Client.Events;
+using System.Linq;
 
 namespace SezXmlSendler
 {
@@ -27,6 +29,7 @@ namespace SezXmlSendler
         public event ErrorEventHandler OnError;
         public event LogEventHandler OnSended;
         public event LogEventHandler OnLog;
+        public event LogEventHandler OnReceive;
         public LoadTableAction<string> OnLoadTable;
 
         private int? _processingPercentValue;
@@ -145,7 +148,13 @@ namespace SezXmlSendler
             OnLog?.Invoke(this, messageLog);
         }
 
+        private void receiveMessage(string receiveMessage)
+        {
+            OnReceive?.Invoke(this, receiveMessage);
+        }
+
         public string RoutingKey { get; set; }
+        public string QueueName { get; set; }
         private string _stockName;
         public string Name { get; set; }
         public Sendler(string name, string routingKey,
@@ -159,6 +168,13 @@ namespace SezXmlSendler
             OnLoadTable = loadTable;
             _filledTable = filledTable;
             _processingPercent = processing;
+        }
+
+        public Sendler(string name, string queueName)
+        {
+            _stockName = name;
+            Name = name;
+            QueueName = queueName;
         }
 
         public override string ToString()
@@ -211,6 +227,48 @@ namespace SezXmlSendler
                         body: body
                     );
                 }
+            }
+        }
+
+        public async Task ReceiveAsync()
+        {
+            Cancel = false;
+            var factory = new ConnectionFactory()
+            {
+                HostName = RabbitMQConnectionParameters.HostName,
+                Port = RabbitMQConnectionParameters.Port,
+                VirtualHost = "/",
+                UserName = RabbitMQConnectionParameters.User,
+                Password = RabbitMQConnectionParameters.Password
+            };
+            try
+            {
+                //showLog($"{DateTime.Now} - factory created");
+                using (var connection = factory.CreateConnection())
+                {
+                    //showLog($"{DateTime.Now} - factory.CreateConnection() - ok");
+                    using (var channel = connection.CreateModel())
+                    {
+                        showLog($"{DateTime.Now} - connection.CreateModel() - ok");
+                        channel.QueueDeclare(QueueName, true, false, false, null);
+                        var consumer = new EventingBasicConsumer(channel);
+                        showLog($"{DateTime.Now} - Очередь {QueueName} задекларирована!");
+                        consumer.Received += (model, ea) =>
+                        {
+                            var body = ea.Body;
+                            showLog($"{DateTime.Now} - Очередь {QueueName} получено сообщение: {ea.Body}!");
+                            receiveMessage(Encoding.UTF8.GetString(body.ToArray()));
+                            Cancel = true;
+                        };
+
+                        channel.BasicConsume(QueueName, true, consumer);
+                    }
+                }
+            }
+            catch(Exception err)
+            {
+                if (OnError != null)
+                    OnError(this, new ErrorEventArgs(new Exception($" Ошибка: {err.Message}")));
             }
         }
     }

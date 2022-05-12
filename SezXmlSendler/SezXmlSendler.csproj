@@ -10,7 +10,7 @@
     <AssemblyName>SezXmlSendler</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -39,86 +39,97 @@
   </PropertyGroup>
   <PropertyGroup />
   <ItemGroup>
-    <Reference Include="BusinessModel">
-      <HintPath>..\packages\BusinessModel.dll</HintPath>
+    <Reference Include="BusinessModel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\BusinessModel.dll</HintPath>
     </Reference>
-    <Reference Include="ControlsUI">
-      <HintPath>..\packages\ControlsUI.dll</HintPath>
+    <Reference Include="ControlsUI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\ControlsUI.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.Charts.v10.2.Core, Version=10.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DevExpress.Charts.v10.2.Core.dll</HintPath>
+      <HintPath>..\..\..\packages\DevExpress.Charts.v10.2.Core.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.Data.v10.2, Version=10.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DevExpress.Data.v10.2.dll</HintPath>
+      <HintPath>..\..\..\packages\DevExpress.Data.v10.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.RichEdit.v10.2.Core, Version=10.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\DevExpress.RichEdit.v10.2.Core.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.Utils.v10.2, Version=10.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DevExpress.Utils.v10.2.dll</HintPath>
+      <HintPath>..\..\..\packages\DevExpress.Utils.v10.2.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.Xpo.v10.2, Version=10.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DevExpress.Xpo.v10.2.dll</HintPath>
+      <HintPath>..\..\..\packages\DevExpress.Xpo.v10.2.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.XtraBars.v10.2, Version=10.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DevExpress.XtraBars.v10.2.dll</HintPath>
+      <HintPath>..\..\..\packages\DevExpress.XtraBars.v10.2.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.XtraCharts.v10.2, Version=10.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DevExpress.XtraCharts.v10.2.dll</HintPath>
+      <HintPath>..\..\..\packages\DevExpress.XtraCharts.v10.2.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.XtraCharts.v10.2.UI, Version=10.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DevExpress.XtraCharts.v10.2.UI.dll</HintPath>
+      <HintPath>..\..\..\packages\DevExpress.XtraCharts.v10.2.UI.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.XtraEditors.v10.2, Version=10.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DevExpress.XtraEditors.v10.2.dll</HintPath>
+      <HintPath>..\..\..\packages\DevExpress.XtraEditors.v10.2.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.XtraGauges.v10.2.Core, Version=10.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DevExpress.XtraGauges.v10.2.Core.dll</HintPath>
+      <HintPath>..\..\..\packages\DevExpress.XtraGauges.v10.2.Core.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.XtraGauges.v10.2.Win, Version=10.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DevExpress.XtraGauges.v10.2.Win.dll</HintPath>
+      <HintPath>..\..\..\packages\DevExpress.XtraGauges.v10.2.Win.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.XtraGrid.v10.2, Version=10.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DevExpress.XtraGrid.v10.2.dll</HintPath>
+      <HintPath>..\..\..\packages\DevExpress.XtraGrid.v10.2.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.XtraLayout.v10.2, Version=10.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DevExpress.XtraLayout.v10.2.dll</HintPath>
+      <HintPath>..\..\..\packages\DevExpress.XtraLayout.v10.2.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.XtraNavBar.v10.2, Version=10.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DevExpress.XtraNavBar.v10.2.dll</HintPath>
+      <HintPath>..\..\..\packages\DevExpress.XtraNavBar.v10.2.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.XtraPrinting.v10.2, Version=10.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DevExpress.XtraPrinting.v10.2.dll</HintPath>
+      <HintPath>..\..\..\packages\DevExpress.XtraPrinting.v10.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraRichEdit.v10.2, Version=10.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\DevExpress.XtraRichEdit.v10.2.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.XtraScheduler.v10.2, Version=10.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DevExpress.XtraScheduler.v10.2.dll</HintPath>
+      <HintPath>..\..\..\packages\DevExpress.XtraScheduler.v10.2.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.XtraScheduler.v10.2.Core, Version=10.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DevExpress.XtraScheduler.v10.2.Core.dll</HintPath>
+      <HintPath>..\..\..\packages\DevExpress.XtraScheduler.v10.2.Core.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.XtraTreeList.v10.2, Version=10.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DevExpress.XtraTreeList.v10.2.dll</HintPath>
+      <HintPath>..\..\..\packages\DevExpress.XtraTreeList.v10.2.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.XtraVerticalGrid.v10.2, Version=10.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\DevExpress.XtraVerticalGrid.v10.2.dll</HintPath>
+      <HintPath>..\..\..\packages\DevExpress.XtraVerticalGrid.v10.2.dll</HintPath>
     </Reference>
-    <Reference Include="KernelUI">
-      <HintPath>..\packages\KernelUI.dll</HintPath>
+    <Reference Include="KernelUI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\KernelUI.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.5.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
@@ -156,11 +167,13 @@
     <Reference Include="RabbitMQ.Client, Version=3.6.9.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
       <HintPath>..\packages\RabbitMQ.Client.3.6.9\lib\net45\RabbitMQ.Client.dll</HintPath>
     </Reference>
-    <Reference Include="SEZ">
-      <HintPath>..\packages\SEZ.dll</HintPath>
+    <Reference Include="SEZ, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\SEZ.dll</HintPath>
     </Reference>
-    <Reference Include="StartDAL">
-      <HintPath>..\packages\StartDAL.dll</HintPath>
+    <Reference Include="StartDAL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\StartDAL.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -170,6 +183,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
       <Private>True</Private>
@@ -220,7 +234,6 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
@@ -271,6 +284,8 @@
     <Compile Include="Model\SendlerParam.cs" />
     <Compile Include="Model\SendlersCongif.cs" />
     <Compile Include="Model\Utf8StringWriter.cs" />
+    <Compile Include="Model\XMLParser\PropertyValue.cs" />
+    <Compile Include="Model\XMLParser\XMLParser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sendler.cs" />

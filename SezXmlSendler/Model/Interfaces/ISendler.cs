@@ -18,9 +18,12 @@ namespace SezXmlSendler.Model.Interfaces
         string RoutingKey { get; set; }
         DateTime TimeRunning { get; set; }
 
+        string QueueName { get; set; }
         bool Cancel { get; set; }
         bool IsRunning { get; }
         public Task RunningAsync(bool needSend);
+
+        public Task ReceiveAsync();
     }
     
 }

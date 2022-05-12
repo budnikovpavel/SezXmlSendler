@@ -2,11 +2,82 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="RabbitMQ.Client" Version="6.2.1" />
+    <Reference Include="BusinessModel">
+      <HintPath>..\..\..\packages\BusinessModel.dll</HintPath>
+    </Reference>
+    <Reference Include="ControlsUI">
+      <HintPath>..\..\..\packages\ControlsUI.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Charts.v10.2.Core">
+      <HintPath>..\..\..\packages\DevExpress.Charts.v10.2.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Data.v10.2">
+      <HintPath>..\..\..\packages\DevExpress.Data.v10.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Utils.v10.2">
+      <HintPath>..\..\..\packages\DevExpress.Utils.v10.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Xpo.v10.2">
+      <HintPath>..\..\..\packages\DevExpress.Xpo.v10.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraBars.v10.2">
+      <HintPath>..\..\..\packages\DevExpress.XtraBars.v10.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraCharts.v10.2">
+      <HintPath>..\..\..\packages\DevExpress.XtraCharts.v10.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraCharts.v10.2.UI">
+      <HintPath>..\..\..\packages\DevExpress.XtraCharts.v10.2.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraEditors.v10.2">
+      <HintPath>..\..\..\packages\DevExpress.XtraEditors.v10.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraGauges.v10.2.Core">
+      <HintPath>..\..\..\packages\DevExpress.XtraGauges.v10.2.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraGauges.v10.2.Win">
+      <HintPath>..\..\..\packages\DevExpress.XtraGauges.v10.2.Win.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraGrid.v10.2">
+      <HintPath>..\..\..\packages\DevExpress.XtraGrid.v10.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraLayout.v10.2">
+      <HintPath>..\..\..\packages\DevExpress.XtraLayout.v10.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraNavBar.v10.2">
+      <HintPath>..\..\..\packages\DevExpress.XtraNavBar.v10.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraPrinting.v10.2">
+      <HintPath>..\..\..\packages\DevExpress.XtraPrinting.v10.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraScheduler.v10.2">
+      <HintPath>..\..\..\packages\DevExpress.XtraScheduler.v10.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraScheduler.v10.2.Core">
+      <HintPath>..\..\..\packages\DevExpress.XtraScheduler.v10.2.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraTreeList.v10.2">
+      <HintPath>..\..\..\packages\DevExpress.XtraTreeList.v10.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraVerticalGrid.v10.2">
+      <HintPath>..\..\..\packages\DevExpress.XtraVerticalGrid.v10.2.dll</HintPath>
+    </Reference>
+    <Reference Include="KernelUI">
+      <HintPath>..\..\..\packages\KernelUI.dll</HintPath>
+    </Reference>
+    <Reference Include="RabbitMQ.Client">
+      <HintPath>..\..\..\packages\RabbitMQ.Client.3.6.9\lib\netcore45\RabbitMQ.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="SEZ">
+      <HintPath>..\..\..\packages\SEZ.dll</HintPath>
+    </Reference>
+    <Reference Include="StartDAL">
+      <HintPath>..\..\..\packages\StartDAL.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
